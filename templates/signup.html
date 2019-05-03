@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='colorpictures.css') }}" type="text/css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    
+    <title>Color Pictures</title>
+</head>
+<body>
+    <div style="display:flex; flex-direction: column; align-items: center;">
+        <div>
+            <form action="{{ url_for('home') }}" style="display:inline;">
+                <input type="submit" value="Homepage">
+            </form>
+            <form action="{{ url_for('full_category') }}" style="display:inline;">
+                <input type="submit" value="Start Coloring">
+            </form>
+            <form action="{{ url_for('login') }}" style="display:inline;">
+                <input type="submit" value="Log in">
+            </form>
+            <hr>
+        </div>
+        <div style="display:flex; flex-direction: column; align-items: center; justify-content: center;">
+            <div>
+                <h2>Sign up</h2>
+            </div>
+            <div>
+                <p>{{ warning }}</p>
+            </div>
+            <div>
+                <form method="POST" id="signup">
+                    <div style="display:flex; flex-direction: column; align-items: center; justify-content: center;">
+                        <div>
+                            <input id="fullname" type="text" size="30" placeholder="fullname" name="fullname" onfocus="this.placeholder=''" onblur="this.placeholder='fullname'">
+                        </div>
+                        <div style="display:none" id="warning1"></div>
+                        <div>
+                            <input id="username" type="text" size="30" placeholder="username (không chứa dấu cách)" name="username" onfocus="this.placeholder=''" onblur="this.placeholder='username (không chứa dấu cách)'">
+                        </div>
+                        <div style="display:none" id="warning2"></div>
+                        <div>
+                            <input id="password" type="password" size="30" placeholder="password (không chứa dấu cách)" name='password' onfocus="this.placeholder=''" onblur="this.placeholder='password (không chứa dấu cách)'">
+                        </div>
+                        <div style="display:none" id="warning3"></div>
+                    </div>
+                </form>
+            </div>
+            <div>
+                <button id="button" type="button" form="signup" onclick="signUp()">Sign up</button>
+            </div>
+        </div>
+    </div>
+    <input style="display:none" id="username_list" value="{{ username_list }}">
+</body>
+<script>
+function signUp() {
+    var username_list = document.getElementById('username_list').value;
+    var fullname = document.getElementById("fullname").value;
+    var username = document.getElementById("username").value;
+    var password = document.getElementById("password").value;
+    var button = document.getElementById("button");
+    var warning1 = document.getElementById("warning1");
+    var warning2 = document.getElementById("warning2");
+    var warning3 = document.getElementById("warning3");
+    var x;
+    if (fullname.trim() === "") {
+        warning1.style.display = "block";
+        warning1.innerHTML = "Bạn chưa nhập fullname!";
+        x = 1;
+    } else {
+        warning1.style.display = "none";
+    }
+    if (username.trim() === "") {
+        warning2.style.display = "block";
+        warning2.innerHTML = "Bạn chưa nhập username!";
+        x = 1;
+    } else if (username.includes(" ")) {
+        warning2.style.display = "block";
+        warning2.innerHTML = "Username không được chứa dấu cách!";
+        x = 1;
+    } else if (username_list.includes(username)) {
+        warning2.style.display = "block";
+        warning2.innerHTML = "Username đã tồn tại!";
+        x = 1;
+    } else {
+        warning2.style.display = "none";
+    }
+    if (password === "") {
+        warning3.style.display = "block";
+        warning3.innerHTML = "Bạn chưa nhập password!";
+        x = 1;
+    } else if (password.includes(" ")) {
+        warning3.style.display = "block";
+        warning3.innerHTML = "Password không được chứa dấu cách!";
+        x = 1;
+    } else {
+        warning3.style.display = "none";
+    }
+    if (x == 1) {
+        button.type = "button";
+    } else {
+        button.type = "submit";
+    }
+}
+</script>
+</html>

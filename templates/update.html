@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='colorpictures.css') }}" type="text/css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <title>Update</title>
+</head>
+<body>
+    <div style="display:flex; flex-direction: column; align-items: center;">
+        <div>
+            <form action="{{ url_for('home') }}" style="display:inline;">
+                <input type="submit" value="Homepage">
+            </form>
+            <hr>
+        </div>
+        <div>
+            <h2>Update</h2>
+            <p>Date: 11/1/2019</p>
+            <p>
+                1. CSS: màu nền, hình dạng button. <br>
+                2. Hoàn thiện lưu ảnh vào list tô màu sau và list yêu thích
+            </p>
+            <p>Date: 12/1/2019</p>
+            <p>
+                1. CSS: thay đổi button, cài CSS cho ô textarea để comment. <br>
+                2. Sửa lỗi: thay đổi tên art mới, infor của user không được chỉ có dấu cách.
+            </p>
+            <p>Date: 18/1/2019</p>
+            <p>
+                1. JS: Hiện 1 số thông báo trực tiếp trên trang đăng nhập và đăng ký khi không hơp lệ. <br>
+                2. CSS: Chỉnh lại môt số trang. Trang Change Infor đã hiện CSS.
+            </p>
+            <p>Date: 19/1/2019</p>
+            <p>
+                1. JS: Hiện 1 số thông báo trực tiếp trên trang khi thông tin nhập vào không hơp lệ: <br>
+                - Change Infor <br>
+                - View picture
+            </p>
+            <p>Date: 27/1/2019</p>
+            <p>
+                1. JS: Báo trực tiếp username hoặc password không hợp lệ khi signup hoặc login mà không phải load lại trang.<br>
+            </p>
+        </div>
+    </div>
+</body>
+</html>

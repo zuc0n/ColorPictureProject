@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='colorpictures.css') }}" type="text/css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <title>Search {{ searchword }}</title>
+</head>
+<body>
+    <div style="display:flex; flex-direction: column; align-items: center;">
+        <div>
+            <form action="{{ url_for('home') }}" style="display:inline;">
+                <input type="submit" value="Homepage">
+            </form>
+            <form action="{{ url_for('full_category') }}" style="display:inline;">
+                <input type="submit" value="Category">
+            </form>
+            {% if 'token' in session %}
+                <form action="{{ url_for('profile', artist=session['token']) }}" style="display:inline;">
+                    <input type="submit" value="My Arts">
+                </form>
+                <form action="{{ url_for('logout') }}" style="display:inline;">
+                    <input type="submit" value="Log out">
+                </form>
+            {% else %}
+                <form action="{{ url_for('login') }}" style="display:inline;">
+                    <input type="submit" value="Log in">
+                </form>
+                <form action="{{ url_for('signup') }}" style="display:inline;">
+                    <input type="submit" value="Sign up">
+                </form>
+            {% endif %}
+            <hr>
+        </div>
+        <div style="display:flex; flex-direction: column; align-items: center; justify-content: center;">
+            <div>
+                <h2>Search</h2>
+            </div>
+            <div>
+                <form action="" method="post" id="searchform">
+                    <div>
+                        <input id="word" name="searchword" type="text" size="70" placeholder="e.g. aladdin, ben 10 ..." onfocus="this.placeholder=''" onblur="this.placeholder='e.g. aladdin, ben 10 ...'">
+                    </div>
+                </form>
+            </div>
+            <div>
+                <label form="searchform" for="">Select field: </label>
+                <input form="searchform" name="field1" type="checkbox" value="raw_picture"> Raw Pictures
+                <input form="searchform" name="field2" type="checkbox" value="finished_art"> Finished Art
+                <input form="searchform" name="field3" type="checkbox" value="artist"> Artist
+            </div>
+            <div>
+                <button id="find" type="button" form="searchform" onclick="buttonSubmit()">Find</button>
+            </div>
+        </div>
+    </div>
+    
+    <div id="warning" style="display:none">
+        <hr>
+        <h2>Result:</h2>
+        <p>You searched for nothing!</p>
+    </div>
+    
+    {% if display == 'yes' %}
+    <hr>
+    <h2>Result for: {{ searchword }}</h2>
+        <div style="width: 100%;">
+            <!-- Tạo 3 cột. lưu ý tổng 3 div phải là 100%, nếu không sẽ có 1 khoảng trống giữa 2 cột -->
+            <div style="width: 33%; float: left;">
+                <h4>Raw Pictures</h4>
+                <hr>
+                {% if display1 == 'yes' %}
+                    {% for r in raw_list %}
+                    <a href="{{ url_for('new_picture', picid = r.id) }}" target="_blank" style="text-decoration: none; color:rgb(109, 78, 0);">
+                        <p>{{ r.picname }}</p>
+                        <img src="{{ r.piclink }}" alt="" width="40%" height="40%">
+                    </a>
+                    {% endfor %}
+                    <p>{{ warn1 }}</p>
+                {% endif %}
+            </div>
+            <div style="width: 34%; display: inline-block;">
+                <h4>Finished Arts</h4>
+                <hr>
+                {% if display2 == 'yes' %}
+                    {% for f in finished_list %}
+                    <a href="{{ url_for('view', picid = f.id) }}" target="_blank" style="text-decoration: none; color:rgb(0, 93, 0);">
+                        <p>{{ f.picname }}</p>
+                        <img src="{{ f.piclink }}" alt="" width="40%" height="40%">
+                    </a>
+                    {% endfor %}
+                    <p>{{ warn2 }}</p>
+                {% endif %}
+            </div>
+            <div style="width: 33%; float: right;">
+                <h4>Artists</h4>
+                <hr>
+                {% if display3 == 'yes' %}
+                    {% for a in artist_list %}
+                    <a href="{{ url_for('profile', artist=a.username) }}" target="_blank" style="text-decoration: none; color:rgb(163, 68, 0);">
+                        <p>{{ a.fullname }}</p>
+                    </a>
+                    {% endfor %}
+                    <p>{{ warn3 }}</p>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+    <script>
+    function buttonSubmit() {
+        var word = document.getElementById('word').value;
+        var button = document.getElementById('find');
+        var warning = document.getElementById('warning');
+        if (word.trim() == "") {
+            warning.style.display = "block";
+            button.type = "button";
+        } else {
+            warning.style.display = "none";
+            button.type = "submit";
+        }
+    }
+    </script>
+</body>
+</html>

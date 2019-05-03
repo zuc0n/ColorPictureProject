@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='colorpictures.css') }}" type="text/css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    
+    <title>{{ fullname }} | Change Information</title>
+</head>
+<body>
+    <div style="display:flex; flex-direction: column; align-items: center;">
+        <div>
+            <form action="{{ url_for('home') }}" style="display:inline;">
+                <input type="submit" value="Homepage">
+            </form>
+            <form action="{{ url_for('full_category') }}" style="display:inline;">
+                <input type="submit" value="Category">
+            </form>
+            {% if 'token' in session %}
+                <form action="{{ url_for('profile', artist=session['token']) }}" style="display:inline;">
+                    <input type="submit" value="My Arts">
+                </form>
+                <form action="{{ url_for('logout') }}" style="display:inline;">
+                    <input type="submit" value="Log out">
+                </form>
+            {% else %}
+                <form action="{{ url_for('login') }}" style="display:inline;">
+                    <input type="submit" value="Log in">
+                </form>
+                <form action="{{ url_for('signup') }}" style="display:inline;">
+                    <input type="submit" value="Sign up">
+                </form>
+            {% endif %}
+            <hr>
+        </div>
+        <div style="display:flex; flex-direction: column; align-items: center; justify-content: center;">
+            <div>
+                <h2>Change Information</h2>
+            </div>
+            <div>
+                <p>{{ notice }}</p>
+            </div>
+            <div>
+                <form action="" method="POST" id="change_infor">
+                    <div style="display:flex; flex-direction: column; align-items: center; justify-content: center;">
+                        <div>
+                            <label style="display:inline-block; width:120px;" for="">New fullname:</label>
+                            <input type="text" id="fullname" name="fullname">
+                        </div>
+                        <div>
+                            <label style="display:inline-block; width:120px;" for="">New username:</label>
+                            <input type="text" id="username" name="username" placeholder="không chứa dấu cách" onfocus="this.placeholder=''" onblur="this.placeholder='không chứa dấu cách'">
+                        </div>
+                        <div>
+                            <label style="display:inline-block; width:120px;" for="">New password:</label>
+                            <input type="password" id="password" name="password" placeholder="không chứa dấu cách" onfocus="this.placeholder=''" onblur="this.placeholder='không chứa dấu cách'">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div>
+                <button onclick="displayOldpass()">Change</button>
+            </div>
+            <div style="display:none" id="box">
+                <div>
+                    <div>
+                        <label for="">Please type your old password to submit:</label>
+                    </div>
+                    <div>
+                        <input type="password" id="typeoldpass">
+                        <button type="button" form="change_infor" onclick="checkOldpass()" id="submitbutton">Submit</button>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <p style="display:none" id="warning1">Bạn chưa nhập password cũ!</p>
+            </div>
+            <div>
+                <p style="display:none" id="warning2">Bạn đã nhập sai password cũ!</p>
+            </div>
+            <div>
+                <p style="display:none" id="warning3">Bạn đã không thay đổi thông tin gì!</p>
+            </div>
+            <div>
+                <p style="display:none" id="warning4">Username hoặc password không được chứa dấu cách!</p>
+            </div>
+        </div>
+    </div>
+
+    <input style="display:none" type="password" id="oldpass" value="{{ password }}">
+    
+    <script>
+    function displayOldpass() {
+        var box = document.getElementById("box");
+        if (box.style.display === "none") {
+            box.style.display = "block";
+        } else {
+            box.style.display = "none";
+        }
+    }
+    </script>
+    <script>
+    function checkOldpass() {
+        var oldpass = document.getElementById("oldpass").value;
+        var typeoldpass = document.getElementById("typeoldpass").value;
+        var warning1 = document.getElementById("warning1");
+        var warning2 = document.getElementById("warning2");
+        var warning3 = document.getElementById("warning3");
+        var warning4 = document.getElementById("warning4");
+        var submitbutton = document.getElementById("submitbutton");
+        var fullname = document.getElementById("fullname").value;
+        var username = document.getElementById("username").value;
+        var password = document.getElementById("password").value;
+        if (typeoldpass == "") {
+            warning1.style.display = "block";
+            warning2.style.display = "none";
+            warning3.style.display = "none";
+            warning4.style.display = "none";
+            submitbutton.type = "button";
+        } else if (typeoldpass != oldpass) {
+            warning1.style.display = "none";
+            warning2.style.display = "block";
+            warning3.style.display = "none";
+            warning4.style.display = "none";
+            submitbutton.type = "button";
+        } else if (fullname.trim() == "" && username.trim() == "" && password == "" ) {
+            warning1.style.display = "none";
+            warning2.style.display = "none";
+            warning3.style.display = "block";
+            warning4.style.display = "none";
+            submitbutton.type = "button";
+        } else if (username.includes(" ") || password.includes(" ")) {
+            warning1.style.display = "none";
+            warning2.style.display = "none";
+            warning3.style.display = "none";
+            warning4.style.display = "block";
+            submitbutton.type = "button";
+        } else {
+            warning1.style.display = "none";
+            warning2.style.display = "none";
+            warning3.style.display = "none";
+            warning4.style.display = "none";
+            submitbutton.type = "submit";
+        }
+    }
+    </script>
+</body>
+</html>

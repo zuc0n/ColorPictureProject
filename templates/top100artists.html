@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='colorpictures.css') }}" type="text/css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+   
+    <title>Top 100 Artists</title>
+</head>
+<body>
+    <div style="display:flex; flex-direction: column; align-items: center;">
+        <div>
+            <form action="{{ url_for('home') }}" style="display:inline;">
+                <input type="submit" value="Homepage">
+            </form>
+            <form action="{{ url_for('search') }}" style="display:inline;">
+                <input type="submit" value="Search">
+            </form>
+            <form action="{{ url_for('top100pics') }}" style="display:inline;">
+                <input type="submit" value="Top 100 Pictures">
+            </form>
+            <form action="{{ url_for('room_of_fame') }}" style="display:inline;">
+                <input type="submit" value="Room of Fame">
+            </form>
+            <form action="{{ url_for('full_category') }}" style="display:inline;">
+                <input type="submit" value="Start Coloring">
+            </form>
+            <hr>
+        </div>
+        <div style="display:flex; flex-direction: column; align-items: center;">
+            <div>
+                <h2>Top 100 Artists</h2>
+                <hr>
+            </div>
+            <div>
+                <p>{{ notice }}</p>
+            </div>
+            <div style="display:flex; flex-direction: column; align-items: center; justify-content: center;">
+                {% for artist in top100artists %}
+                    <div>
+                        <p>{{ artist.positionintop100 }}</p>
+                    </div>
+                    <div>
+                        <h4><a href="{{ url_for('profile', artist=artist.username) }}" style="text-decoration: none; color:rgb(163, 68, 0);">{{ artist.fullname }}</a></h4>
+                    </div>
+                    <div>
+                        <p>Total Likes: {{ artist.totallikes }}</p>
+                    </div>
+                    <div>
+                        <p>Best pic:</p>
+                    </div>    
+                    <div>
+                        <a href="{{ url_for('view', picid=artist.bestpicid) }}">
+                            <img src="{{ artist.bestpiclink }}" alt="" style="display: block; margin:auto; width:40%; height:40%;">
+                        </a>
+                        <hr style="display: block; width:40%;">
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>

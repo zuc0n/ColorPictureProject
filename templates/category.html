@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='colorpictures.css') }}" type="text/css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <title>Category</title>
+</head>
+<body>
+    <div style="display:flex; flex-direction: column; align-items: center;">
+        <div>
+            <form action="{{ url_for('home') }}" style="display:inline;">
+                <input type="submit" value="Homepage">
+            </form>
+            <form action="{{ url_for('search') }}" style="display:inline;">
+                <input type="submit" value="Search">
+            </form>
+            {% if 'token' in session %}
+                <form action="{{ url_for('profile', artist=session['token']) }}" style="display:inline;">
+                    <input type="submit" value="My Arts">
+                </form>
+                <form action="{{ url_for('logout') }}" style="display:inline;">
+                    <input type="submit" value="Log out">
+                </form>
+            {% else %}
+                <form action="{{ url_for('login') }}" style="display:inline;">
+                    <input type="submit" value="Log in">
+                </form>
+                <form action="{{ url_for('signup') }}" style="display:inline;">
+                    <input type="submit" value="Sign up">
+                </form>
+            {% endif %}
+            <hr>
+        </div>
+        <div style="display:flex; flex-direction: column; align-items: center; justify-content: center;">
+            <div>
+                <h2>Category</h2>
+            </div>
+            <div style="display:flex; flex-wrap: wrap; justify-content: center; width: 700px;">
+                <div>
+                    <form action="{{ url_for('new_picture', picid=random_pic.id) }}" method="get">
+                        <button class="change_background" type="submit" style="width: 200px; height: 140px;">Random pic</button>
+                    </form>
+                    <!-- <a href="{{ url_for('new_picture', picid=random_pic.id) }}">
+                        <img src="{{ random_pic.piclink }}" alt="" width="20%" height="20%">
+                    </a> -->
+                </div>
+                {% for c in category_list %}
+                <div>
+                    <form action="{{ url_for('one_category', category=c.category) }}" method="get">
+                        <button class="change_background" type="submit" style="width: 200px; height: 140px;">{{ c.name }}</button>
+                    </form>
+                    <!-- <a href="{{ url_for('one_category', category=c.category) }}">
+                        <img src="{{ c.label }}" alt="" width="20%" height="20%">
+                    </a> -->
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='colorpictures.css') }}" type="text/css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    
+    <title>Not Allow</title>
+</head>
+<body>
+    <div style="display:flex; flex-direction: column; align-items: center;">
+        <div>
+        <form action="{{ url_for('home') }}" style="display:inline;">
+            <input type="submit" value="Homepage">
+        </form>
+        <form action="{{ url_for('full_category') }}" style="display:inline;">
+            <input type="submit" value="Category">
+        </form>
+        {% if 'token' in session %}
+            <form action="{{ url_for('profile', artist=session['token']) }}" style="display:inline;">
+                <input type="submit" value="My Arts">
+            </form>
+            <form action="{{ url_for('logout') }}" style="display:inline;">
+                <input type="submit" value="Log out">
+            </form>
+        {% else %}
+            <form action="{{ url_for('login') }}" style="display:inline;">
+                <input type="submit" value="Log in">
+            </form>
+            <form action="{{ url_for('signup') }}" style="display:inline;">
+                <input type="submit" value="Sign up">
+            </form>
+        {% endif %}
+        <hr>
+        </div>
+        <div>
+            <p>Bạn không được quyền truy cập vào trang này!</p>
+        </div>
+    </div>
+</body>
+</html>

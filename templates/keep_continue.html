@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='colorpictures.css') }}" type="text/css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <title>{{ pic.picname }}</title>
+</head>
+<body style="width:100%;">
+    <div style="display:flex; flex-direction: column; align-items: center; width:100%">
+        <div>
+            <form action="{{ url_for('home') }}" style="display:inline;">
+                <input type="submit" value="Homepage">
+            </form>
+            <form action="{{ url_for('full_category') }}" style="display:inline;">
+                <input type="submit" value="Category">
+            </form>
+            <form action="{{ url_for('profile', artist=session['token']) }}" style="display:inline;">
+                <input type="submit" value="My Arts">
+            </form>
+            <form action="{{ url_for('logout') }}" style="display:inline;">
+                <input type="submit" value="Log out">
+            </form>
+            <hr>
+        </div>
+        <div style="display: flex; justify-content: space-around; width:100%">
+            <div>
+                <canvas id="canvas" width="567" height="794"></canvas>
+            </div>
+            <div style="display:flex; flex-direction: column; align-items: center;">
+                <div>
+                    <p>Pick your color first: </p>
+                </div>
+                <div>
+                    <input id="colorPicker" type="color" name="favcolor" value="#ff0000">
+                </div>
+                <div>
+                    <button id="resetcanvas" onclick="clearCanvas()">Reset</button>
+                </div>
+                <div>
+                    <button onclick="displayNamebox()">Change name</button>
+                </div>
+                <div style="display:none" id="namebox">
+                    <input class="someinput" type="text" placeholder="Enter new name" id="newname" name="picname" onfocus="this.placeholder=''" onblur="this.placeholder='Enter new name'">
+                </div>
+                <form style="display:none" action="" method="post" id="submitform">
+                    <input style="display:none" type="text" id="inputname" name="picname">
+                    <input style="display:none" type="text" id="inputlink" name="piclink">
+                    <input style="display:none" type="text" id="inputpicstatus" name="picstatus">
+                </form> 
+                <div>
+                    <button id="saveworking" form="submitform" type="button" onclick="saveWorking()">Save</button>
+                </div>
+                <div>
+                    <button id="savefinished" form="submitform" type="button" onclick="saveFinished()">Finish Art</button>
+                </div>
+                <div>
+                    <form action="{{ url_for('new_picture', picid=pic.picrawid) }}" target="_blank" method="get">
+                        <input type="submit" value="Color this raw picture">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <input id="token" style="display:none" type="text" value="{{ token }}">
+    <input id="linkB64" style="display:none" type="text" value="{{ piclinkb64 }}">
+    <script>
+        imageLinkB64 = document.getElementById('linkB64').value;
+    </script>
+    <script>
+    function displayNamebox() {
+        var x = document.getElementById("namebox");
+        if (x.style.display === "none") {
+            x.style.display = "block";
+        } else {
+            x.style.display = "none";
+        }
+    }
+    </script>
+    <script>
+        function saveWorking() {
+            var savebutton = document.getElementById("saveworking");
+            savebutton.type = "submit";
+            var canvas = document.getElementById('canvas');
+            var context = canvas.getContext("2d");
+            var dataURL = canvas.toDataURL();
+            document.getElementById('inputlink').value = dataURL;
+            document.getElementById('inputpicstatus').value = "working";
+            var name = document.getElementById('newname').value;
+            document.getElementById('inputname').value = name;
+        }
+    </script>
+    <script>
+        function saveFinished() {
+            var savebutton = document.getElementById("savefinished");
+            savebutton.type = "submit";
+            var canvas = document.getElementById('canvas');
+            var context = canvas.getContext("2d");
+            var dataURL = canvas.toDataURL();
+            document.getElementById('inputlink').value = dataURL;
+            document.getElementById('inputpicstatus').value = "finished";
+            var name = document.getElementById('newname').value;
+            document.getElementById('inputname').value = name;
+        }
+    </script>
+    <script>
+        document.getElementById('resetcanvas').onclick = function clearCanvas() {
+            drawImageFromWebUrl(imageLinkB64)
+        }
+    </script>
+    <script src="../static/test.js"></script>
+
+</body>
+</html>

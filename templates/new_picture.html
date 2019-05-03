@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='colorpictures.css') }}" type="text/css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <title>New Pictures</title>
+</head>
+<body style="width:100%">
+    <div style="display:flex; flex-direction: column; align-items: center; width:100%">
+        <div>
+            <form action="{{ url_for('home') }}" style="display:inline;">
+                <input type="submit" value="Homepage">
+            </form>
+            <form action="{{ url_for('full_category') }}" style="display:inline;">
+                <input type="submit" value="Category">
+            </form>
+            {% if 'token' in session %}
+                <form action="{{ url_for('profile', artist=session['token']) }}" style="display:inline;">
+                    <input type="submit" value="My Arts">
+                </form>
+                <form action="{{ url_for('logout') }}" style="display:inline;">
+                    <input type="submit" value="Log out">
+                </form>
+            {% else %}
+                <form action="{{ url_for('login') }}" style="display:inline;">
+                    <input type="submit" value="Log in">
+                </form>
+                <form action="{{ url_for('signup') }}" style="display:inline;">
+                    <input type="submit" value="Sign up">
+                </form>
+            {% endif %}
+            <hr>
+        </div>
+        <div style="display: flex; justify-content: space-around; width:100%">
+            <div>
+                <canvas id="canvas" width="567" height="794"></canvas>
+            </div>
+            <div style="display:flex; flex-direction: column; align-items: center;">
+                <div>
+                    <p>Pick your color first: </p>
+                </div>
+                <div>
+                    <input id="colorPicker" type="color" name="favcolor" value="#ff0000">
+                </div>
+                <div>
+                    <button onclick="clearCanvas()" id="resetcanvas">Reset</button>
+                </div>
+                <div>
+                    <button onclick="displayForm()">Save</button>
+                </div>
+                <div style="display:none" id="loginwarning">
+                    <div style="display:flex; flex-direction: column; align-items: center;">
+                        <div>
+                            <p>Bạn chưa đăng nhập!</p>
+                        </div>
+                        <div>
+                            <button type="submit" form="needlogin" onclick="Unsave()">Log in</button>
+                        </div>
+                    </div>
+                    <form style="display:none" action="" target="_blank" method="POST" id="needlogin">
+                        <input style="display:none" type="text" id="unsavelinkid" name="unsavelink">
+                    </form>
+                </div>
+                <div style="display:none" id="submitform">
+                    <div style="display: flex; flex-direction: column; align-items: center;">
+                        <div>
+                            <p>Name your art:</p>
+                        </div>
+                        <div>
+                            <form action="" method="POST" id="theform">
+                                <input class="someinput" type="text" placeholder="Enter name" id="inputname" name="picname" onfocus="this.placeholder=''" onblur="this.placeholder='Enter name'">
+                                <input style="display:none" type="text" id="inputlink" name="piclink">
+                                <input style="display:none" type="text" id="inputpicstatus" name="picstatus">
+                                <input style="display:none" type="text" id="inputpicartist" name="picartist">
+                            </form>
+                        </div>
+                        <div>
+                            <p id="setnamewarning1" style="display:none">Bạn chưa đặt tên!</p>
+                        </div>
+                        <div>
+                            <p id="setnamewarning2" style="display:none">Tên không hợp lệ!</p>
+                        </div>
+                        <div>
+                            <button id="saveworking" type="button" form="theform" onclick="saveWorking()">Save as Working Art</button>
+                        </div>
+                        <div>
+                            <button id="savefinished" type="button" form="theform" onclick="saveFinished()">Save as Finished Art</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <input id="token" style="display:none" type="text" value="{{ token }}">
+    <input id="linkB64" style="display:none" type="text" value="{{ piclinkb64 }}">
+    <input id="resetlinkB64" style="display:none" type="text" value="{{ resetlinkb64 }}">
+    <script>
+        imageLinkB64 = document.getElementById('linkB64').value;
+    </script>
+    <script>
+        resetLinkB64 = document.getElementById('resetlinkB64').value;
+    </script>
+    <script>
+        function displayForm() {
+          var x = document.getElementById("submitform");
+          var y = document.getElementById("loginwarning");
+          var token = document.getElementById("token").value;
+          if (token == "") {
+            x.style.display = "none";
+            y.style.display = "block";
+          } else {
+            x.style.display = "block";
+            y.style.display = "none";
+          }
+        }
+    </script>
+    <script>
+    function Unsave() {
+        var canvas = document.getElementById('canvas');
+        var context = canvas.getContext("2d");
+        var dataURL = canvas.toDataURL();
+        document.getElementById('unsavelinkid').value = dataURL;
+    }
+    </script>
+    <script>
+        function saveWorking() {
+            var name = document.getElementById("inputname").value;
+            var warning1 = document.getElementById("setnamewarning1");
+            var warning2 = document.getElementById("setnamewarning2");
+            var savebutton = document.getElementById("saveworking");
+            if (name === "") {
+            warning1.style.display = "block";
+            warning2.style.display = "none";
+            savebutton.type = "button";
+            } else if (name.trim() === "") {
+            warning1.style.display = "none";
+            warning2.style.display = "block";
+            savebutton.type = "button";
+            } else {
+            warning1.style.display = "none";
+            warning2.style.display = "none";
+            savebutton.type = "submit";
+            var token = document.getElementById("token").value;
+            var canvas = document.getElementById('canvas');
+            var context = canvas.getContext("2d");
+            var dataURL = canvas.toDataURL();
+            document.getElementById('inputlink').value = dataURL;
+            document.getElementById('inputpicstatus').value = "working";
+            document.getElementById('inputpicartist').value = token;
+            }
+        }
+    </script>
+    <script>
+        function saveFinished() {
+            var name = document.getElementById("inputname").value;
+            var warning1 = document.getElementById("setnamewarning1");
+            var warning2 = document.getElementById("setnamewarning2");
+            var savebutton = document.getElementById("savefinished");
+            if (name === "") {
+            warning1.style.display = "block";
+            warning2.style.display = "none";
+            savebutton.type = "button";
+            } else if (name.trim() === "") {
+            warning1.style.display = "none";
+            warning2.style.display = "block";
+            savebutton.type = "button";
+            } else {
+            warning1.style.display = "none";
+            warning2.style.display = "none";
+            savebutton.type = "submit";
+            var token = document.getElementById("token").value;
+            var canvas = document.getElementById('canvas');
+            var context = canvas.getContext("2d");
+            var dataURL = canvas.toDataURL();
+            document.getElementById('inputlink').value = dataURL;
+            document.getElementById('inputpicstatus').value = "finished";
+            document.getElementById('inputpicartist').value = token;
+            }
+        }
+    </script>
+    <script>
+        document.getElementById('resetcanvas').onclick = function clearCanvas() {
+            drawImageFromWebUrl(resetLinkB64)
+        }
+    </script>
+    <script src="../static/test.js"></script>
+</body>
+</html>

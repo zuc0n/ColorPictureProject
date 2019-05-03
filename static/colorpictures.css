@@ -1,0 +1,52 @@
+html {
+    height: 100%;
+    width: 100%;
+}
+body {
+    font-family: 'Nunito', sans-serif;
+    background-color: rgb(233, 247, 239);
+    height: 100%;
+    width: 100%;
+}
+hr {
+    border-top: 1px solid rgb(42, 155, 91);
+}
+.abc{
+display: Inline-block;
+width: 20%;
+}
+.abc img{
+width: 100%;
+}
+button, input[type=submit], input[type=button], input[type=text], input[type=password], input[type=color], textarea, #cmtbutton {
+    border-radius: 15px;
+    border: 1px solid rgb(42, 155, 91);
+    background-color: white;
+    padding: 5px 10px;
+    font-size: 16px;
+    margin: 5px;
+    font-family: 'Nunito', sans-serif;
+}
+input::placeholder {
+    color: gray;
+    font-family: 'Nunito', sans-serif;
+    font-size: 16px;
+}
+button, input[type=submit], input[type=button] {
+    background-color: white;
+    color: black;
+    transition-duration: 0.4s;
+}
+button:hover, input[type=submit]:hover, input[type=button]:hover {
+    background-color: rgb(42, 155, 91);
+    color: white;
+}
+.change_background {
+    background-color: white;
+    color: black;
+    transition-duration: 0.4s;
+}
+.change_background:hover {
+    background-image: url(http://www.coloring-book.info/coloring/Aladdin/aladdin-59.jpg);
+    background-size: contain;
+}

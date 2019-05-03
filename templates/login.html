@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='colorpictures.css') }}" type="text/css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    
+    <title>Color Pictures</title>
+</head>
+<body>
+    <div style="display:flex; flex-direction: column; align-items: center;">
+        <div>
+            <form action="{{ url_for('home') }}" style="display:inline;">
+                <input type="submit" value="Homepage">
+            </form>
+            <form action="{{ url_for('full_category') }}" style="display:inline;">
+                <input type="submit" value="Start Coloring">
+            </form>
+            <form action="{{ url_for('signup') }}" style="display:inline;">
+                <input type="submit" value="Sign up">
+            </form>
+            <hr>
+        </div>
+        <div style="display:flex; flex-direction: column; align-items: center; justify-content: center;">
+            <div>
+                <h2>Log in</h2>
+            </div>
+            <div>
+                <p>{{ warning }}</p>
+            </div>
+            <div>
+                <form method="POST" id="login">
+                    <div style="display:flex; flex-direction: column; align-items: center; justify-content: center;">
+                        <div>
+                            <input id="username" type="text" size="30" placeholder="username" name=username onfocus="this.placeholder=''" onblur="this.placeholder='username'">
+                        </div>
+                        <div style="display:none" id="warning1"></div>
+                        <div>
+                            <input id="password" type="password" size="30" placeholder="password" name=password onfocus="this.placeholder=''" onblur="this.placeholder='password'">
+                        </div>
+                        <div style="display:none" id="warning2"></div>
+                    </div>
+                </form>
+            </div>
+            <div>
+                <button id="button" type="button" form="login" onclick="logIn()">Log in</button>
+            </div>
+        </div>
+    </div>
+    <input style="display:none" id="users" value="{{ users }}">
+</body>
+<script>
+function logIn() {
+    var a = document.getElementById('users').value;
+    var users = JSON.parse(a); // chuyển dữ liệu JSON data thành javascript object
+    var username = document.getElementById("username").value;
+    var password = document.getElementById("password").value;
+    var button = document.getElementById("button");
+    var warning1 = document.getElementById("warning1");
+    var warning2 = document.getElementById("warning2");
+    if (username.trim() === "") {
+        warning1.style.display = "block";
+        warning2.style.display = "none";
+        warning1.innerHTML = "Bạn chưa nhập username!";
+    } else if (!Object.keys(users).includes(username)) {
+        warning1.style.display = "block";
+        warning2.style.display = "none";
+        warning1.innerHTML = "Username không tồn tại!";
+    } else {
+        warning1.style.display = "none";
+        if (password === "") {
+            warning2.style.display = "block";
+            warning2.innerHTML = "Bạn chưa nhập password!";
+        } else if (users[username] != password) {
+            warning2.style.display = "block";
+            warning2.innerHTML = "Password sai!";
+        } else {
+            warning2.style.display = "none";
+            button.type = 'submit';
+        }
+    }
+}
+</script>
+</html>
